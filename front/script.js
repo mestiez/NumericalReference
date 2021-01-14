@@ -1,57 +1,18 @@
-const userInputBox = document.getElementById("user-input");
-const resultBox = document.getElementById("result-box");
-const submitButton = document.getElementById("submit-button");
-
-let response = {};
-let results = [];
-let hideHardToRead = true;
-
-const roundd = (value, digits) => {
-    const p = Math.pow(10, digits);
-    return Math.round(value * p) / p;
-}
-
-const formatMultiplier = (m) => {
-    const oom = Math.floor(Math.log10(m));
-
-    if (oom > 9) {
-        const d = Math.pow(10, oom);
-        return Math.round(m / d) + 'e' + oom;
-    }
-
-    if (oom >= 9)
-        return roundd(Math.round(m / 1e8) * 0.1, 2) + ' billion';
-
-    if (oom >= 6)
-        return roundd(Math.round(m / 1e5) * 0.1, 2) + ' million';
-
-    if (oom >= 3)
-        return Math.round(m);
-
-    if (oom < -3) {
-        const d = Math.pow(10, oom);
-        return Math.round(m / d) + 'e' + oom;
-    }
-
-    return roundd(m, 2);
-}
-
-const isValidReference = (r) => {
-    return Math.abs(r.multiplier) >= 0.01 && Math.abs(Math.floor(Math.log10(r.multiplier)) <= 10);
-}
-
 const requestReferences = (input) => {
     if (!input || input.trim().length == 0)
         return;
 
-    fetch(window.location.href + 'api?input=' + input)
+    fetch(window.location.origin + requestString + input)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             hideHardToRead = true;
             response = data;
             results = response.references;
             renderResults();
+        })
+        .catch(e => {
+            console.log(e);
+            resultBox.innerHTML = `<h4 style="color: red">${e?.message || (typeof(e) == 'string' ? e : 'Cannot reach server')}</h4>`;
         });
 };
 
@@ -89,13 +50,14 @@ const renderResults = () => {
 };
 
 const doExampleInput = () => {
-    userInputBox.value = '25 m/s';
-    requestReferences('25 m/s');
+    userInputBox.value = exampleInput;
+    requestReferences(exampleInput);
+    pushHistory(exampleInput);
 };
 
 const showAbout = () => {
-    resultBox.innerHTML = 
-    `<h2>Numerical Reference</h2>
+    resultBox.innerHTML =
+        `<h2>Numerical Reference</h2>
     <p>
     This is a website that shows your input in comparison to some known measurements in order to give you a point of reference. It is a work in progress, as all measurements are hand-picked, so it only supports 
     <b>countable amounts, distance, speed, energy, time, and mass measurements</b>. This list will expand slowly as time goes on, as will the amount of entries within each category. 
@@ -104,13 +66,22 @@ const showAbout = () => {
     It is unlikely that every unit of measurement will be supported because there are way too many of them and I am not insane.
     </p>
     <div class='example-button' onclick="doExampleInput()">
-    Just enter something like "25 m/s" in the input box and press Enter.
+    Just enter something like "${exampleInput}" in the input box and press Enter.
     </div>
     `;
 };
 
+aboutButton.addEventListener('click', () => {
+    showAbout(); 
+    pushHistory(aboutStateIdentity)
+});
+
 userInputBox.addEventListener('keydown', (e) => {
     if (e.key === 'Enter')
+    {
         requestReferences(userInputBox.value);
+        pushHistory(userInputBox.value);
+    }
 });
+
 submitButton.addEventListener('click', () => requestReferences(userInputBox.value));
