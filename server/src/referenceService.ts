@@ -1,13 +1,7 @@
 import { Path, GET, QueryParam } from "typescript-rest";
 import { referenceData } from "./main";
-import "./processor";
+import { ReferenceValue } from "./models";
 import { processInput } from "./processor";
-
-interface ReferenceValue {
-    description: string;
-    source: string;
-    value: string;
-}
 
 @Path("/api")
 export class ReferenceService {

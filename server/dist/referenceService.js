@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReferenceService = void 0;
 const typescript_rest_1 = require("typescript-rest");
 const main_1 = require("./main");
-require("./processor");
 const processor_1 = require("./processor");
 let ReferenceService = class ReferenceService {
     getReferencePoints(input) {

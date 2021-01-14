@@ -1,9 +1,6 @@
 import Qty from 'js-quantities';
 import { referenceData } from './main';
-
-interface ReturningError{
-    message: string;
-}
+import { ProcessResult, ReferenceComparison } from './models';
 
 export function processInput(input: string): ProcessResult {
     let parsed: Qty;
@@ -35,7 +32,6 @@ export function processInput(input: string): ProcessResult {
 
     const sortFunction = (r: ReferenceComparison): number => {
         return Math.abs(Math.floor(Math.log10(r.multiplier)));
-        // return Math.abs(1 - r.multiplier);
     }
 
     let references: ReferenceComparison[] = relevantReferences.map(r => {
@@ -54,18 +50,4 @@ export function processInput(input: string): ProcessResult {
         input: parsed.format(),
         references
     };
-}
-
-interface ProcessResult {
-    success: boolean;
-    error?: ReturningError;
-    input: string;
-    references: ReferenceComparison[];
-}
-
-interface ReferenceComparison {
-    description: string;
-    referenceValue: string;
-    multiplier: number;
-    sourceUrl: string;
 }

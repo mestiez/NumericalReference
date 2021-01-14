@@ -32,11 +32,10 @@ const fs = __importStar(require("fs"));
 const excel_1 = __importDefault(require("excel"));
 const referenceService_1 = require("./referenceService");
 const js_quantities_1 = __importDefault(require("js-quantities"));
+const paths_1 = require("./paths");
 exports.httpPort = parseInt(process.argv[2]) || 8080;
 exports.httpsPort = parseInt(process.argv[3]) || 8443;
 exports.referenceData = [];
-var privateKey = fs.readFileSync('ssl/generated/server.key', 'utf8');
-var certificate = fs.readFileSync('ssl/generated/cert.crt', 'utf8');
 const addReference = (array) => {
     if (array && array.length == 3) {
         if (!array[0] || !array[1] || !array[2])
@@ -49,14 +48,14 @@ const addReference = (array) => {
     }
 };
 let app = express_1.default();
-app.use(express_1.default.static('../front'));
+app.use(express_1.default.static(paths_1.staticSitePath));
 typescript_rest_1.Server.buildServices(app, referenceService_1.ReferenceService);
 const httpServer = http_1.default.createServer(app);
 const httpsServer = https_1.default.createServer({
-    cert: certificate,
-    key: privateKey,
+    cert: fs.readFileSync(paths_1.certificatePath, 'utf8'),
+    key: fs.readFileSync(paths_1.privateKeyPath, 'utf8'),
     ca: [
-        fs.readFileSync('ssl/generated/bundle.crt'),
+        fs.readFileSync(paths_1.certificateChainPath),
     ]
 }, app);
 const startServer = () => {
@@ -67,7 +66,7 @@ const startServer = () => {
         console.log('https listening on ' + exports.httpsPort);
     });
 };
-excel_1.default('dist/data/output.xlsx').then((d) => {
+excel_1.default(paths_1.dataPath).then((d) => {
     d.forEach(addReference);
     console.log(exports.referenceData.length + ' references added from ' + d.length + ' spreadsheet entries');
     startServer();

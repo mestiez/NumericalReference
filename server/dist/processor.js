@@ -34,7 +34,6 @@ function processInput(input) {
     });
     const sortFunction = (r) => {
         return Math.abs(Math.floor(Math.log10(r.multiplier)));
-        // return Math.abs(1 - r.multiplier);
     };
     let references = relevantReferences.map(r => {
         return {
