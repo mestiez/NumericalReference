@@ -6,13 +6,20 @@ import https from "https"
 import * as fs from "fs"
 //@ts-ignore
 import parseXlsx from 'excel';
+import yargs from 'yargs';
+//@ts-ignore
+import { hideBin } from 'yargs/helpers';
 
 import { ReferenceService } from "./referenceService";
 import Qty from "js-quantities";
 import { certificateChainPath, certificatePath, dataPath, privateKeyPath, staticSitePath } from "./paths";
 
-export const httpPort = parseInt(process.argv[2]) || 8080;
-export const httpsPort = parseInt(process.argv[3]) || 8443;
+const argv = yargs(hideBin(process.argv)).argv;
+
+export const httpPort: number = parseInt(argv.port as string) || 8080;
+export const httpsPort: number = parseInt(argv.httpsPort as string) || 8443;
+export const doHttps: boolean = argv.https === undefined ? true : (argv.https === 'true');
+
 export const referenceData: Reference[] = [];
 
 const addReference = (array: string[]) => {
@@ -35,7 +42,7 @@ app.use(express.static(staticSitePath))
 Server.buildServices(app, ReferenceService);
 
 const httpServer = http.createServer(app);
-const httpsServer = https.createServer(
+const httpsServer = doHttps ? https.createServer(
     {
         cert: fs.readFileSync(certificatePath, 'utf8'),
         key: fs.readFileSync(privateKeyPath, 'utf8'),
@@ -43,16 +50,18 @@ const httpsServer = https.createServer(
             fs.readFileSync(certificateChainPath),
         ]
     },
-    app);
+    app) : undefined;
 
 const startServer = () => {
     httpServer.listen(httpPort, () => {
-        console.log('http server listening on ' + httpPort);
+        console.log('http listening on ' + httpPort);
     });
 
-    httpsServer.listen(httpsPort, () => {
-        console.log('https listening on ' + httpsPort);
-    });
+    if (doHttps && httpsServer) {
+        httpsServer.listen(httpsPort, () => {
+            console.log('https listening on ' + httpsPort);
+        });
+    }
 };
 
 parseXlsx(dataPath).then((d: string[][]) => {

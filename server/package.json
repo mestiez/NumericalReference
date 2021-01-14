@@ -5,15 +5,19 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
-    "serve": "npx tsc & node ../server/dist/main.js ",
-    "serveprod": "npx tsc & node ../server/dist/main.js 80 443"
+    "serve": "npx tsc & node ../server/dist/main.js",
+    "serveprod": "npx tsc & node ../server/dist/main.js --port=80 --httpsPort=443"
   },
   "author": "zooi",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "dependencies": {
     "@types/js-quantities": "^1.6.2",
     "excel": "^1.0.1",
     "js-quantities": "^1.7.6",
-    "typescript-rest": "^3.0.2"
+    "typescript-rest": "^3.0.2",
+    "yargs": "^16.2.0"
+  },
+  "devDependencies": {
+    "@types/yargs": "^15.0.12"
   }
 }

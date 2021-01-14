@@ -57,13 +57,16 @@ const doExampleInput = () => {
 
 const showAbout = () => {
     resultBox.innerHTML =
-        `<h2>Numerical Reference</h2>
+   `<h2>Numerical Reference</h2>
     <p>
     This is a website that shows your input in comparison to some known measurements in order to give you a point of reference. It is a work in progress, as all measurements are hand-picked, so it only supports 
     <b>countable amounts, distance, speed, energy, time, and mass measurements</b>. This list will expand slowly as time goes on, as will the amount of entries within each category. 
     </p>
     <p>
     It is unlikely that every unit of measurement will be supported because there are way too many of them and I am not insane.
+    </p>
+    <p>
+    Created by zooi. <a href="https://github.com/mestiez/NumericalReference">The source code is available here.</a>
     </p>
     <div class='example-button' onclick="doExampleInput()">
     Just enter something like "${exampleInput}" in the input box and press Enter.
