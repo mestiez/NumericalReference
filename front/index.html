@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>Numerical Reference</title>
+</head>
+
+<body>
+    <div class="absolute-fill vertical-flex">
+        <div class="vertical-flex" style="gap: 7px">
+            <div class="home-logo"></div>
+            <div class="input-box">
+                <input type="text" placeholder="Enter a measurement" role="combobox" title="Compare" aria-label="Compare" autocomplete="off"
+                    aria-haspopup="false" data-lpignore="true" id="user-input">
+                <button id="submit-button">Enter</button>
+            </div>
+            <div class="small-links">
+                <span class="button" onclick="showAbout()">about</span>
+            </div>
+        </div>
+        <div id="result-box"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
